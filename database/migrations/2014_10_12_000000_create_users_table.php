@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone_number');
             $table->boolean('is_marketing')->default(false);
-            $table->rememberToken();
             $table->timestamps();
             $table->timestamp('last_login_at')->nullable();
         });
