@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:jwt')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function () {
+    Route::middleware('auth')->get('/user', function (Request $request) {
+        $userId = $request->user()->id;
+        $user = User::find($userId);
+        return response()->json($user);
+    });
+
+    Route::post('/login', [LoginController::class, 'login']);
 });

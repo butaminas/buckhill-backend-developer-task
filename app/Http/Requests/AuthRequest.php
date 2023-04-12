@@ -2,37 +2,33 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserRequest extends FormRequest
+class AuthRequest extends FormRequest
 {
-    public mixed $user;
     protected $stopOnFirstFailure = true;
 
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, Rule|array|string>
+     */
     public function rules(): array
     {
-        $updateRules = match($this->method()){
-            'PUT', 'PATCH' => '|sometimes',
-            default => ''
-        };
-
         return [
-            'first_name' => 'required|string|max:255'. $updateRules,
-            'last_name' => 'required|string|max:255'. $updateRules,
-            'is_admin' => 'nullable|boolean',
-            'email' => 'required|email:rfc,dns|max:255|unique:users,email,'.$this->user. $updateRules,
-            'password' => 'required|string|min:5'. $updateRules,
-            'avatar' => 'nullable|string',
-            'address' => 'required|string|max:255'. $updateRules,
-            'phone_number' => 'required|string|max:255'. $updateRules,
-            'is_marketing' => 'nullable|boolean',
+            'email' => 'required|max:255',
+            'password' => 'required|string|min:5',
         ];
     }
 

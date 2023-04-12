@@ -28,14 +28,17 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Auth::viaRequest('jwt', function (Request $request) {
-            try{
-                $tokenPayload = JWT::decode($request->bearerToken(), new Key(config('jwt.key'), 'HS256'));
-
-                return User::find($tokenPayload)?->first();
-            } catch(\Exception $th){
-                Log::error($th);
+            try {
+                if (!$request->bearerToken()) {
+                    return null;
+                }
+                $tokenPayload = JWT::decode($request->bearerToken(), new Key(config('jwt.key'), config('jwt.algo')));
+            } catch(\Exception $e){
+                Log::error($e);
                 return null;
             }
+
+            return User::find($tokenPayload->sub);
         });
     }
 }
