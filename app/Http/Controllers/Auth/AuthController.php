@@ -21,10 +21,12 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
+        $admin = str_contains($request->path(), 'admin');
+
         // Validate the user's credentials
-        $user = User::where('email', $credentials['email'])->first();
+        $user = User::where('email', $credentials['email'])->where('is_admin', $admin)->first();
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'User not found'], 401);
         }
 
         // Generate a JWT token for the user
