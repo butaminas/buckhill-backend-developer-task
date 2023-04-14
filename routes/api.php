@@ -22,7 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
 
-        Route::middleware(['admin'])->group(function () {
+        Route::middleware(['isAdmin'])->group(function () {
             Route::get('/logout', [AuthController::class, 'logout']);
             Route::post('/create', [AdminController::class, 'store']);
             Route::get('/user-listing', [AdminController::class, 'index']);
@@ -34,13 +34,12 @@ Route::prefix('v1')->group(function () {
     Route::prefix('user')->group(function () {
         Route::middleware(['auth'])->group(function () {
             Route::get('/', [UsersController::class, 'myDetails']);
-            Route::delete('/', [UsersController::class, 'store']);
-            Route::get('/orders', [UsersController::class, 'myDetails']);
-            Route::put('/edit', [UsersController::class, 'myDetails']);
-            Route::get('/logout', [AuthController::class, 'logout']);
+            Route::delete('/', [UsersController::class, 'destroy']);
+            Route::put('/edit', [UsersController::class, 'update']);
         });
 
         Route::post('/login', [AuthController::class, 'login']);
+        Route::get('/logout', [AuthController::class, 'logout']);
         Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
         Route::post('/reset-password-token', [ForgotPasswordController::class, 'reset']);
 
