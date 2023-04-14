@@ -53,7 +53,7 @@ class AuthController extends Controller
             }
             $payload = JWT::decode($token, new Key(config('jwt.key'), config('jwt.algo')));
 
-            $this->invalidateToken($payload['jti']);
+            $this->invalidateToken($payload->jti);
 
             return response()->json(['message' => 'Successfully logged out']);
         } catch (\Exception $e) {
@@ -74,8 +74,6 @@ class AuthController extends Controller
     public function invalidateToken($jti): void
     {
         $key = 'revoked_jwt_token:' . $jti;
-        Cache::put($key, true, config('jwt.expiration')); // Store the revoked token for 60 minutes
+        Cache::put($key, true, config('jwt.expiration'));
     }
-
-
 }

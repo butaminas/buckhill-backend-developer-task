@@ -2,9 +2,10 @@
 
 namespace Tests;
 
+use AllowDynamicProperties;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-abstract class TestCase extends BaseTestCase
+#[AllowDynamicProperties] abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 }
