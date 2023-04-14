@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +39,16 @@ class AuthServiceProvider extends ServiceProvider
                 return null;
             }
 
-            return User::find($tokenPayload->sub);
+            if ($this->isTokenRevoked($tokenPayload)) {
+                return null;
+            }
+            return User::findOrFail($tokenPayload->sub);
         });
+    }
+
+    private function isTokenRevoked($token): bool
+    {
+        $key = 'revoked_jwt_token:' . $token->jti;
+        return Cache::has($key);
     }
 }
