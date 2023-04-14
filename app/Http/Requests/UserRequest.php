@@ -8,7 +8,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserRequest extends FormRequest
 {
-    public mixed $user;
     protected $stopOnFirstFailure = true;
 
     public function authorize(): bool
@@ -26,7 +25,6 @@ class UserRequest extends FormRequest
         return [
             'first_name' => 'required|string|max:255'. $updateRules,
             'last_name' => 'required|string|max:255'. $updateRules,
-            'is_admin' => 'nullable|boolean',
             'email' => 'required|email:rfc,dns|max:255|unique:users,email,'.$this->user. $updateRules,
             'password' => 'required|string|min:5'. $updateRules,
             'avatar' => 'nullable|string',

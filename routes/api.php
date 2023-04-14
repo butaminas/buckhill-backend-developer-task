@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +16,16 @@ use App\Http\Controllers\Auth\LoginController;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::middleware('auth')->get('/user', function (Request $request) {
-        $userId = $request->user()->id;
-        $user = User::find($userId);
-        return response()->json($user);
+
+    Route::prefix('admin')->group(function () {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::get('/logout', [AuthController::class, 'logout']);
+
+        Route::post('/create', [AdminController::class, 'store']);
+        Route::get('/user-listing', [AdminController::class, 'index']);
+        Route::put('/user-edit/{uuid}', [AdminController::class, 'update']);
+        Route::delete('/user-delete/{uuid}', [AdminController::class, 'destroy']);
     });
 
-    Route::post('/login', [LoginController::class, 'login']);
+
 });
