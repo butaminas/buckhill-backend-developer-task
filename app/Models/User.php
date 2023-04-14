@@ -8,12 +8,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Facades\Hash;
+use App\Notifications\EmailResetNotification;
+use Illuminate\Auth\Passwords\CanResetPassword;
 
 class User extends Authenticatable
 {
     use HasFactory;
     use HasUuids;
     use Notifiable;
+    use CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -52,8 +55,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($value)
+    public function setPasswordAttribute($value): void
     {
         $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new EmailResetNotification($token));
     }
 }
