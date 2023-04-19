@@ -19,8 +19,12 @@ class Authenticate extends Middleware
      */
     public function handle($request, Closure $next, ...$guards): Response
     {
-        if ($this->auth->guard($guards)->check()) {
-            return $next($request);
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if ($this->auth->guard($guard)->check()) {
+                return $next($request);
+            }
         }
 
         return response()->json(['error' => 'Unauthorized'], 401);

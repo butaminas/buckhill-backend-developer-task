@@ -55,7 +55,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($value): void
+    public function setPasswordAttribute(string $value): void
     {
         $this->attributes['password'] = Hash::make($value);
     }

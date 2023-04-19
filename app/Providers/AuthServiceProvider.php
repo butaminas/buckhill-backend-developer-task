@@ -46,7 +46,7 @@ class AuthServiceProvider extends ServiceProvider
         });
     }
 
-    private function isTokenRevoked($jti): bool
+    private function isTokenRevoked(string $jti): bool
     {
         $key = 'jwt:invalidated:' . $jti;
         return Cache::has($key);

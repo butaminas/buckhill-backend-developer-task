@@ -71,7 +71,7 @@ class AuthController extends Controller
         return response()->json(['token' => $token]);
     }
 
-    public function invalidateToken($jti): void
+    public function invalidateToken(string $jti): void
     {
         $key = 'jwt:invalidated:' . $jti;
         Cache::put($key, true, config('jwt.expiration'));
