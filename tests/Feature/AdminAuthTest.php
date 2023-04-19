@@ -58,7 +58,7 @@ test('logout invalidates the JWT token', function () {
 
     // Try to use the invalidated token
     $response = $this->getJson($this->endpoint . '/user-listing', [
-        'Authorizationn' => 'Bearer ' . $token,
+        'Authorization' => 'Bearer ' . $token,
     ]);
 
     $response->assertStatus(401);
