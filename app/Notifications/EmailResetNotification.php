@@ -11,7 +11,7 @@ class EmailResetNotification extends Notification
 {
     use Queueable;
 
-    public string $token;
+    private string $token;
 
     /**
      * Create a new notification instance.
@@ -34,23 +34,11 @@ class EmailResetNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(): MailMessage
     {
         return (new MailMessage())
                     ->line('Forgot your password?')
                     ->action('Click here to reset', url('/password-reset', $this->token))
                     ->line('Thank you for using our application!');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
     }
 }
