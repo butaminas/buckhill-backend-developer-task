@@ -19,7 +19,7 @@ class AdminAccess extends Middleware
      */
     public function handle($request, Closure $next, ...$guards): Response
     {
-        if ($this->auth->guard($guards)?->user()?->is_admin === 0) {
+        if (!$this->auth->guard($guards)?->user()?->is_admin) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $next($request);

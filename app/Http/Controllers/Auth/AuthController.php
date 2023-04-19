@@ -73,7 +73,7 @@ class AuthController extends Controller
 
     public function invalidateToken($jti): void
     {
-        $key = 'revoked_jwt_token:' . $jti;
+        $key = 'jwt:invalidated:' . $jti;
         Cache::put($key, true, config('jwt.expiration'));
     }
 }

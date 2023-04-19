@@ -39,16 +39,16 @@ class AuthServiceProvider extends ServiceProvider
                 return null;
             }
 
-            if ($this->isTokenRevoked($tokenPayload)) {
+            if ($this->isTokenRevoked($tokenPayload->jti)) {
                 return null;
             }
             return User::findOrFail($tokenPayload->sub);
         });
     }
 
-    private function isTokenRevoked($token): bool
+    private function isTokenRevoked($jti): bool
     {
-        $key = 'revoked_jwt_token:' . $token->jti;
+        $key = 'jwt:invalidated:' . $jti;
         return Cache::has($key);
     }
 }

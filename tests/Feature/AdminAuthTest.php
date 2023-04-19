@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Cache;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->endpoint = '/api/v1/user';
-    $this->password = 'password123';
-    $this->user = User::factory()->create(['email' => 'test@example.com', 'password' => $this->password]);
+    $this->endpoint = '/api/v1/admin';
+    $this->password = 'admin';
+    $this->user = User::factory()->create(['password' => $this->password, 'is_admin' => true]);
 });
 
 test('login with valid credentials returns a JWT token', function () {
@@ -42,9 +42,9 @@ test('logout invalidates the JWT token', function () {
         'jti' => $jti
     ], config('jwt.key'), config('jwt.algo'));
 
-    $this->getJson($this->endpoint, [
+    $this->getJson($this->endpoint . '/user-listing', [
         'Authorization' => 'Bearer ' . $token,
-    ])->assertJsonStructure(['id']);
+    ])->assertJsonStructure(['total']);
 
     $response = $this->withHeaders([
         'Authorization' => 'Bearer ' . $token,
@@ -57,7 +57,7 @@ test('logout invalidates the JWT token', function () {
     $this->refreshApplication();
 
     // Try to use the invalidated token
-    $response = $this->getJson($this->endpoint, [
+    $response = $this->getJson($this->endpoint . '/user-listing', [
         'Authorizationn' => 'Bearer ' . $token,
     ]);
 
